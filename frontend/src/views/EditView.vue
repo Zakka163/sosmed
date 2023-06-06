@@ -1,23 +1,19 @@
 <script setup>
 import axios from 'axios';
-import router from '../router';
-import { onMounted, ref ,onBeforeUnmount} from 'vue';
+import { onMounted, ref } from 'vue';
+import { useRoute ,useRouter} from 'vue-router';
 const data = ref({})
 const judul = ref('')
 const penulis = ref('')
 const isi = ref('')
+const router = useRouter()
 const id = ref(0)
-
+const route = useRoute()
 onMounted(async ()=>{
   try {
-    let uri = window.location.search.substring(1); 
-    let params = new URLSearchParams(uri);
-    console.log(params.get("id"))
-    id.value=params.get("id")
-    const response = await axios.get(`http://localhost:8000/note/${id.value}`);
+    id.value=route.params.id
+    const response = await axios.get(`http://localhost:8000/note/${route.params.id}`);
     data.value = response.data.data[0]
-    //console.log(response.data.data)
-
     isi.value = data.value.isi
     judul.value = data.value.nama
     penulis.value = data.value.penulis
@@ -58,11 +54,7 @@ async function changeNote(){
         <div>
             <button @click="changeNote" type="button" class="btn btn-success me-2">change</button>
             <router-link to="/"><button @click="editNote" type="button" class="btn btn-danger me-2">cancel</button></router-link>
-
         </div>  
       </div>
-      
-    
-
     </div>
 </template>

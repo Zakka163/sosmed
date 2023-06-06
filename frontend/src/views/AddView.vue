@@ -1,30 +1,15 @@
 <script setup>
 import axios from 'axios';
 import router from '../router';
-import { onMounted, ref ,onBeforeUnmount} from 'vue';
+import { ref } from 'vue';
 
 const judul = ref('')
 const penulis = ref('')
 const isi = ref('')
 
 
-// onMounted(async ()=>{
-//   try {
-//     const response = await axios.get(`http://localhost:8000/note/${id.value}`);
-//     data.value = response.data.data[0]
-    
-//     id.value = data.value.id
-//     isi.value = data.value.isi
-//     judul.value = data.value.nama
-//     penulis.value = data.value.penulis
-//     console.log(data.value.id)
-//   } catch (error) {
-//     console.error(error);
-//   }
-// })
-
-
 async function addNote(){
+  console.log("sedang request....");
     const res = await axios.post(`http://localhost:8000/note`, {  
     nama:judul.value,
     isi:isi.value,
@@ -52,8 +37,8 @@ async function addNote(){
           <input type="text" class="form-control" id="exampleFormControlInput1" :placeholder=penulis v-model="penulis">
         </div>
         <div>
-            <button @click="addNote" type="button" class="btn btn-success me-2">change</button>
-            <router-link to="/"><button @click="editNote" type="button" class="btn btn-danger me-2">cancel</button></router-link>
+            <button @click="addNote" type="button" class="btn btn-success me-2">add</button>
+            <router-link to="/"><button type="button" class="btn btn-danger me-2">cancel</button></router-link>
 
         </div>  
       </div>

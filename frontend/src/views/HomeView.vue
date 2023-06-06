@@ -1,54 +1,58 @@
 <script setup>
 import axios from 'axios'
-import { ref ,onMounted,onBeforeUnmount,computed} from 'vue';
-const data = ref([])
-const conditionAlert = ref(false)
-const search = ref('')
+import { ref,onMounted,computed} from 'vue';
+let data = ref([])
 
-onBeforeUnmount(()=>{
-console.log("yaaa");
+let conditionAlert = ref(false)
+let search = ref('')
+
+
+const axiosinter = axios.create()
+  axiosinter.interceptors.request.use((req)=>{
+  return req
 })
-const filtered = computed(() =>
-  data.value.filter((n) =>
-    n.isi.toLowerCase().startsWith(search.value.toLowerCase())
-  )
-)
-// function tesNote(){
-//   console.log(data.value);
- 
-//   console.log(data.value); 
-// }
-
-onMounted(async ()=>{
-  
+async function tesshortpol(){
   try {
     const response = await axios.get('http://localhost:8000/note');
-    console.log(response.data.data);
-
+    console.log('tes pol',response);
     data.value = response.data.data
-    console.log(data.value);
+  } catch (error) {
+    console.error(error);
+  } finally{
+    console.log('pol');
+    tesshortpol()
+  }
+}
+
+const filtered = computed(() =>
+    data.value.filter((i) =>
+    i.isi.toLowerCase().startsWith(search.value.toLowerCase())
+  )
+)
+
+onMounted(async ()=>{
+  // tesshortpol()
+  try {
+    const response = await axiosinter.get('http://localhost:8000/note');
+    console.log(data);
+    data.value = response.data.data
+    console.log(data);
+
   } catch (error) {
     console.error(error);
   }
 })
-// onUpdated(async ()=>{
-//   try {
-//     const response = await axios.get('http://localhost:8000/note');
-//     console.log(response.data.data);
 
-//     data.value = response.data.data
-//   } catch (error) {
-//     console.error(error);
-//   }
-// })
-async function deleteNote(param){
+async function deleteNote(index,param){
   const response = await axios.delete(`http://localhost:8000/note/${param}`)
   if (response.status==200) {
-    // const i = names.indexOf(selected.value)
-    // names.splice(i, 1)
-    // selected.value = first.value = last.value = ''
-    const found = data.value.findIndex(element => element.id == param)
-    data.value.splice(found, 1);
+    
+
+    data.value.splice(index, 1);
+    conditionAlert.value = true;
+    setTimeout(()=>{
+      conditionAlert.value = false
+    },3000)
    }
   
 
@@ -57,8 +61,8 @@ async function deleteNote(param){
 
 <template>
     <div class="container">
+      <!-- <div v-if="conditionAlert" class="alert alert-success" role="alert">Succes to delete</div> -->
       <div class="mt-5">
-        <div v-if="conditionAlert" class="alert alert-success" role="alert">Succes to delete</div>
         <div>
           <router-link to="/add">
             <button @click="addNote" type="button" class="btn btn-primary">Add</button>
@@ -71,10 +75,10 @@ async function deleteNote(param){
         </div>
         <ul class="list-group mt-4">
           <li class="d-flex justify-content-between align-items-center list-group-item" v-for="(item, index) in filtered" :key="item.id">
-           <h3 class="text-center">{{ index  }}</h3>{{ item.isi }}
+           <h3 class="text-center">{{ index }}</h3><div class="col-2 text-truncate">{{ item.isi }}</div>
             <div>
-            <router-link :to="{path:'/edit',query:{id: item.id}}"><button @click="editNote" type="button" class="btn btn-success me-2">edit</button></router-link>
-            <button  @click="deleteNote(item.id)" type="button" class="btn btn-danger me-2" >delete</button>
+            <router-link :to="{ name:'edit', params: { id: item.id }}"><button @click="editNote" type="button" class="btn btn-success me-2">edit</button></router-link>
+            <button  @click.prevent="deleteNote(index,item.id)" type="button" class="btn btn-danger me-2" >delete</button>
             </div>  
           </li>
         </ul>

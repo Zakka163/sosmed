@@ -1,33 +1,10 @@
-const { PrismaClient } = require('@prisma/client')
-
-const prisma = new PrismaClient()
-
-// async function main() {
-//     
-//     console.log(post)
-      
-      
-//   // ... you will write your Prisma Client queries here
-    
-//     //console.dir(note, { depth: null })
-//     console.log(note)
-// }
-
-// main()
-//   .then(async () => {
-//     // await prisma.$disconnect()
-//   })
-//   .catch(async (e) => {
-//     console.error(e)
-//     await prisma.$disconnect()
-//     process.exit(1)
-//   })
+const prisma = require('../prisma/index.js')
 
 
 
 const  getNoteAll = async (req, res) => {
   const data = await prisma.note.findMany()
-  console.log("masuk");
+  console.log(req.body);
   res.json({
     "status":200,
     data
@@ -43,6 +20,7 @@ const  postNote = async (req, res) => {
   })
 }
 const  getNote = async (req, res) => {
+  console.log(req.body);
   const id = req.params.id
   const data = await prisma.note.findMany({
     where: {
