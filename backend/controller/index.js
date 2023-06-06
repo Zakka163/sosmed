@@ -91,8 +91,21 @@ const  updateNote = async (req, res) => {
 }
 
 
+const getNotePagination = async (req,res)=>{
+  console.log(req.body);
+  const data= await prisma.note.findMany({
+    skip: parseInt(req.body.skip),
+    take: parseInt(req.body.take),
+    orderBy: {
+      id: req.body.order,
+    },
+    // cursor: {
+    //   id: parseInt(req.body.cursor),
+    // },
+  })  
+  res.json({"status":200,data})
+}
 
 
 
-
-module.exports = {getNoteAll,postNote,getNote,deleteNote,updateNote}
+module.exports = {getNoteAll,postNote,getNote,deleteNote,updateNote,getNotePagination}
