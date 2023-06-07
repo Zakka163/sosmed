@@ -122,6 +122,7 @@ const getNoteScrolling = async (req,res)=>{
   const take = parseInt(req.query.take)
   const lastNote = parseInt(req.query.lastNote)
   const search = req.query.search
+  console.log(search);
   let data = []
   if (lastNote<1) {
       const result= await prisma.note.findMany({
@@ -130,12 +131,17 @@ const getNoteScrolling = async (req,res)=>{
       orderBy: {
         nomor:'asc',
       },
+      where: {
+        nama: {
+          contains: search,
+        },
+      },
       })
       data = result
-      console.log("0");
+      console.log("awal");
   }else{
       const result = await prisma.note.findMany({
-      skip: 10*lastNote,
+      skip: take*lastNote,
       take: take,
       // cursor: {
       //   id :,
@@ -143,9 +149,14 @@ const getNoteScrolling = async (req,res)=>{
       orderBy: {
       nomor:'asc',
       },
+      where: {
+        nama: {
+          contains: search,
+        },
+      }
       })
       data = result
-      console.log("1");
+      console.log("scroll");
   }
   
   res.json({"status":200,data,lastNote,"next":data.length < 10 ? false:true})

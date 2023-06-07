@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import EditView from '../views/EditView.vue'
 import AddView from '../views/AddView.vue'
+import ScrolView from '../views/ScrolView.vue'
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -21,7 +22,12 @@ const router = createRouter({
       path: '/add',
       name: 'add',
       component: AddView
-    }
+    },
+    {
+      path: '/scroll',
+      name: 'scroll',
+      component: ScrolView
+    },
     
   ]
 })
