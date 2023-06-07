@@ -4,7 +4,7 @@ const prisma = require('../prisma/index.js')
 
 const  getNoteAll = async (req, res) => {
   const data = await prisma.note.findMany()
-  console.log(req.body);
+  console.log("getnoteall...");
   res.json({
     "status":200,
     data
@@ -90,7 +90,19 @@ const  updateNote = async (req, res) => {
   // })
 }
 
+const searchNote = async (req,res)=>{
+  console.log(req.query);
+  console.log("search...");
+  const data = await prisma.note.findMany({
+    where: {
+      nama: {
+        contains:req.query.search,
+      }
+    },
+  }) 
+  res.json({"status":200,data})
 
+}
 const getNotePagination = async (req,res)=>{
   console.log(req.body);
   const data= await prisma.note.findMany({
@@ -105,7 +117,39 @@ const getNotePagination = async (req,res)=>{
   })  
   res.json({"status":200,data})
 }
+const getNoteScrolling = async (req,res)=>{
+  console.log("scrolling",req.query);
+  const take = parseInt(req.query.take)
+  const lastNote = parseInt(req.query.lastNote)
+  const search = req.query.search
+  let data = []
+  if (lastNote<1) {
+      const result= await prisma.note.findMany({
+      skip: 0,
+      take: take,
+      orderBy: {
+        nomor:'asc',
+      },
+      })
+      data = result
+      console.log("0");
+  }else{
+      const result = await prisma.note.findMany({
+      skip: 10*lastNote,
+      take: take,
+      // cursor: {
+      //   id :,
+      // },
+      orderBy: {
+      nomor:'asc',
+      },
+      })
+      data = result
+      console.log("1");
+  }
+  
+  res.json({"status":200,data,lastNote,"next":data.length < 10 ? false:true})
+}
 
 
-
-module.exports = {getNoteAll,postNote,getNote,deleteNote,updateNote,getNotePagination}
+module.exports = {getNoteAll,postNote,getNote,deleteNote,updateNote,getNotePagination,searchNote,getNoteScrolling}

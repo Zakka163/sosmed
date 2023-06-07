@@ -3,6 +3,7 @@
 
 generator client {
   provider = "prisma-client-js"
+  previewFeatures = ["fullTextSearch", "fullTextIndex"]
 }
 
 datasource db {
@@ -11,10 +12,7 @@ datasource db {
 }
 
 model Note {
-  id        Int      @id @default(autoincrement())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  nama      String   @db.VarChar(255)
-  isi       String?
-  penulis   String   @db.VarChar(255)
+  id      String   @id 
+  nama    String
+  nomor      Int     @default(autoincrement())
 }
