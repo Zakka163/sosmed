@@ -20,17 +20,20 @@ const  postNote = async (req, res) => {
   })
 }
 const  getNote = async (req, res) => {
-  console.log(req.body);
+  try {
   const id = req.params.id
   const data = await prisma.note.findMany({
     where: {
-      id:parseInt(id)
+      nomor:parseInt(id)
     },
   })
   res.json({
     "status":200,
     data
   })
+  } catch (error) {
+    console.log(error);
+  }
 
 }
 const  deleteNote = async (req, res) => {
@@ -161,6 +164,16 @@ const getNoteScrolling = async (req,res)=>{
   
   res.json({"status":200,data,lastNote,"next":data.length < 10 ? false:true})
 }
+const uploadHandler=async (req, res) => {
+  console.log(req.file);
+  const file = req.file.path;
+  if (!file) {
+    res.status(400).send({
+      status: false,
+      data: "No File is selected.",
+    });
+  }
+  res.send(file);
+}
 
-
-module.exports = {getNoteAll,postNote,getNote,deleteNote,updateNote,getNotePagination,searchNote,getNoteScrolling}
+module.exports = {getNoteAll,postNote,getNote,deleteNote,updateNote,getNotePagination,searchNote,getNoteScrolling,uploadHandler}

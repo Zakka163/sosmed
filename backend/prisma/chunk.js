@@ -1,4 +1,4 @@
-const prisma = require('./prisma/index.js')
+const prisma = require('./index.js')
 const casual = require('casual')
 const post = async ()=>{
 
