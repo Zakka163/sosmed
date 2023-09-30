@@ -12,23 +12,29 @@ const user = sq.define('user', {
     password: {
         type: DataTypes.STRING
     },
-    role: {
+    first_name: {
         type: DataTypes.STRING
     },
-    nama: {
+    middle_name: {
         type: DataTypes.STRING
     },
-    alamat: {
+    last_name: {
         type: DataTypes.STRING
     },
-    foto: {
+    phone: {
         type: DataTypes.STRING
     },
-    nip: {
+    email: {
         type: DataTypes.STRING
     },
-    nik: {
-        type: DataTypes.STRING
+    last_login: {
+        type: DataTypes.DATE
+    },
+    intro: {
+        type: DataTypes.TEXT
+    },
+    profile: {
+        type: DataTypes.TEXT
     },
 },
     {
