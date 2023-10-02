@@ -17,10 +17,10 @@ app.use(express.json())
 
 app.use('/', routing);
 app.use((req, res, next) => {
-	res.status(200).json({ status: '404', message: "gagal, tidak ada endpoint" });
+	res.status(200).json({ status: '404', message: "failed, no endpoint" });
 })
 
 const port = process.env.PORT || 5000
 app.listen(port, () => {
-	console.log(`telah tersambung pada port : ${port}`)
+	console.log(`has been connected to the port : ${port}`)
 });

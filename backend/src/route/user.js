@@ -8,7 +8,8 @@ router.post('/token', Controller.token);
 
 
 router.post('/list_user', auth,Controller.list_user);
-router.delete('/delete/:id', Controller.delete);
+router.delete('/delete/:id', auth,Controller.delete);
+router.delete('/logout/:id', auth,Controller.logout);
 
 // router.post('/update', authentification, Controller.update);
 // router.post('/delete', authentification, Controller.delete);
