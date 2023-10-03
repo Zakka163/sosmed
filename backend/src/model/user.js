@@ -35,7 +35,7 @@ const user = sq.define('user', {
     },
     profile: {
         type: DataTypes.TEXT
-    },
+    }
 },
     {
         paranoid: true,

@@ -1,12 +1,12 @@
 const { DataTypes } = require('sequelize');
 const { sq } = require('../config/connection');
 const user = require('./user')
-const session = sq.define('session', {
+const user_auth = sq.define('user_auth', {
     id: {
         type: DataTypes.STRING,
         primaryKey: true,
     },
-    token: {
+    refresh_token: {
         type: DataTypes.STRING
     },
 },
@@ -16,7 +16,7 @@ const session = sq.define('session', {
     }
 );
 
-session.belongsTo(user, { foreignKey: 'user_id' });
-user.hasMany(session, { foreignKey: 'user_id' });
+user_auth.belongsTo(user, { foreignKey: 'user_id' });
+user.hasMany(user_auth, { foreignKey: 'user_id' });
 
-module.exports = session
+module.exports = user_auth

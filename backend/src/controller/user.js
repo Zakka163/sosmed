@@ -6,7 +6,8 @@ const moment = require('moment')
 const type = require('../helper/type')
 const user_m = require('../model/user')
 const jwt = require('../helper/jwt')
-const session_m = require('../model/session')
+const { sendOTP } = require('../helper/otp')
+const user_auth_m = require('../model/user_auth')
 
 
 class Controller{
@@ -32,7 +33,7 @@ class Controller{
 		}
 	}
 
-	static async list_user(req,res){
+	static async listUser(req,res){
 		const { username,password,first_name,middle_name,last_name,phone,email,last_login,intro,profile } = req.body
 
 		try{
@@ -55,7 +56,8 @@ class Controller{
 			let replace = ''
 			if(!username && !email ) return res.status(200).json({ status: 500, message: "empty email and userename "}) 
 			let data_user = await sq.query(`select * from "user" where username = :username or email = :email`,type({username,email}))
-
+			let is_verified_email = data_user[0].is_verified_email
+			if(!is_verified_email){ return res.status(200).json({ status: 500, message: "email has not been verified" }) }
 			if(data_user.length < 1){ return res.status(200).json({ status: 500, message: "missing username or email" }) }
 
 			let hash_pass = data[0].password
@@ -63,16 +65,16 @@ class Controller{
 
 			if(!is_match){ return res.status(200).json({ status: 500, message: "wrong password"}) }
 
-			const check_login = await sq.query(`select * from "session" s join "user" u on u.id = s.user_id where s.user_id = :id`,type({id:`${data[0].id}`}))
+			const check_login = await sq.query(`select * from "user_auth" s join "user" u on u.id = s.user_id where s.user_id = :id`,type({id:`${data[0].id}`}))
 		
 			if (check_login.length > 0) {return res.status(201).json({ status: 204, message: "already logged in"})}
 			let token = jwt.generateToken({id:data[0].id})
 			await sq.transaction(async (t)=>{
-				let time = moment().format('YYYY-MM-DD')
+				let time = moment()
 				await user_m.update({last_login:time},{ where:{ id:data[0].id } },{ transaction: t })
-				const session = await session_m.create({id:nanoid(10),token,user_id:data[0].id},{ transaction: t })
-				const session_token = jwt.generateToken({id:session.id})
-		        res.status(200).json({ status: 200, message: "success",token:session_token })
+				const user_auth = await user_auth_m.create({id:nanoid(10),token,user_id:data[0].id},{ transaction: t })
+				const user_auth_token = jwt.generateToken({id:user_auth.id})
+		        res.status(200).json({ status: 200, message: "success",token:user_auth_token })
 			})
 			
 
@@ -117,9 +119,38 @@ class Controller{
 		const { id } = req.params
 
 		try{
-			await session_m.destroy({where:{id}})
+			await user_auth_m.destroy({where:{id}})
 			
             res.status(200).json({ status: 200, message: "success",data })
+
+		}
+		catch(err){
+			console.log(req.body)
+            console.log(err)
+            res.status(500).json({ status: 500, message: "failed", data: err })
+		}
+	}
+	static async verifiedEmail(req,res){
+		const { code_otp,user_id} = req.body
+
+		try{
+			await user_m.update({is_verified_email:true},{where:{id:user_id}})
+            res.status(200).json({ status: 200, message: "success" })
+
+		}
+		catch(err){
+			console.log(req.body)
+            console.log(err)
+            res.status(500).json({ status: 500, message: "failed", data: err })
+		}
+	}
+	static async sendOtp(req,res){
+		const { user_id ,email} = req.body
+
+		try{
+			// await user_m.update({is_verified_email:true},{where:{id:user_id}})
+			sendOTP(email)
+            res.status(200).json({ status: 200, message: "success" })
 
 		}
 		catch(err){
