@@ -24,9 +24,9 @@ const verify_otp = async (req,res)=>{
 			console.log(check_expiration_time)
 			console.log(data_user_otp[0].expiration_time,'  = ',moment().toString())
 			// console.log(data_user_otp[0])
-			
-			if(!check_expiration_time){ return res.status(200).json({ status: 500, message: "otp experied" }) }
 			if(!match){ return res.status(200).json({ status: 500, message: "wrong otp" }) }
+			if(!check_expiration_time){ return res.status(200).json({ status: 500, message: "otp experied" }) }
+
 
 			await user_otp_m.update({is_verified:'1'},{where:{id:otp_id}})
 			
