@@ -1,4 +1,4 @@
-const dotenv = require('dotenv').config({ path:'./src/.env' })
+const dotenv = require('dotenv').config({ path: './src/.env' })
 const { Sequelize } = require('sequelize');
 
 const sq = new Sequelize(process.env.DB_NAME, process.env.DB_USER, process.env.DB_PASS, {

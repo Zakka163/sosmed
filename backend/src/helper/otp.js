@@ -1,17 +1,17 @@
 const moment = require('moment')
 
 
-const generate_otp = (long)=>{
+const generate_otp = (long) => {
   let otp = ''
-  for (let i = 0 ; i < long ; i++) {
+  for (let i = 0; i < long; i++) {
     otp += `${Math.random().toString()[2]}`
   }
   return otp
 
 }
 
-const generate_expiration_time = (minute)=>{
-  return moment().add(parseInt(minute), 'minutes').toString() 
+const generate_expiration_time = (minute) => {
+  return moment().add(parseInt(minute), 'minutes').toString()
 }
 
 // function tes_time(time){

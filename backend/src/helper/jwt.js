@@ -1,11 +1,11 @@
-const jwt = require( 'jsonwebtoken' )
+const jwt = require('jsonwebtoken')
 
-function generateToken( payload ) {
-	return jwt.sign( payload, 'sosmed' )
+function generateToken(payload) {
+	return jwt.sign(payload, 'sosmed')
 }
 
-function verifyToken( token ) {
-	return jwt.verify( token, 'sosmed' )
+function verifyToken(token) {
+	return jwt.verify(token, 'sosmed')
 }
 
 module.exports = {
