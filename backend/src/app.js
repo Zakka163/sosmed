@@ -4,6 +4,7 @@ const app = express()
 const morgan = require('morgan')
 const cors = require('cors')
 const routing = require('./route/index')
+const not_found = require('./helper/error_handler').not_found
 // const server = require('http').createServer(app)
 // const { koneksi_socket } = require('./helper/socket')
 // koneksi_socket(server)
@@ -16,9 +17,7 @@ app.use(express.json())
 // app.use(express.static('asset/file/'));
 
 app.use('/', routing);
-app.use((req, res, next) => {
-	res.status(200).json({ status: '404', message: "failed, no endpoint" });
-})
+app.use(not_found)
 
 const port = process.env.PORT || 5000
 app.listen(port, () => {
