@@ -22,6 +22,7 @@ class Controller {
 			else {
 				let hash_pass = bcrypt.hashPassword(password)
 				const result = await user_m.create({ id: nanoid(20), username: `${username}`, password: `${hash_pass}`, first_name: `${first_name}`, middle_name: `${middle_name}`, last_name: `${last_name}`, phone: `${phone}`, email: `${email}`, last_login, intro: `${intro}`, profile: `${profile}` })
+				console.log(result.id)
 				res.status(200).json({ status: 200, message: "success", data: result })
 			}
 		}

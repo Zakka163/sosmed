@@ -4,7 +4,7 @@ const app = express()
 const morgan = require('morgan')
 const cors = require('cors')
 const routing = require('./route/index')
-const not_found = require('./helper/error_handler').not_found
+const {not_found,error}= require('./helper/error_handler')
 // const server = require('http').createServer(app)
 // const { koneksi_socket } = require('./helper/socket')
 // koneksi_socket(server)

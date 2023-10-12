@@ -3,7 +3,9 @@ const not_found = (req, res, next) => {
 }
 
 const error = (err,req,res,next) => {
-	console.log(err)
+	console.log(err.stack)
+	console.log(err.message)
+	console.log(err.status)
 
 
 	// const message_error = { }
