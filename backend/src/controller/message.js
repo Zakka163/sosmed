@@ -138,11 +138,39 @@ const send_message = async(req,res) => {
 	}
 }
 
+const update_message = async(req,res)=>{
+	const { id,last_message,last_sent_user,user_id } = req.body
+	try {
+		const data = await message_m.update({last_message,last_sent_user,user_id},{where:{id}})
+		res.status(200).json({ status: 200, message: "success", data})
 
+	}
+	catch (err) {
+		console.log(req.body)
+		console.log(err)
+		res.status(500).json({ status: 500, message: "failed", data: err })
+	}
+}
+
+const delete_message = async(req,res)=>{
+	const {id} = req.params
+	try {
+		await message_m.destroy({where:{id}})
+		res.status(200).json({ status: 200, message: "success"})
+
+	}
+	catch (err) {
+		console.log(req.body)
+		console.log(err)
+		res.status(500).json({ status: 500, message: "failed", data: err })
+	}
+}
 
 
 module.exports = {
 	list_message,
 	list_by_message,
-	send_message
+	send_message,
+	update_message,
+	delete_message
 }
