@@ -21,9 +21,11 @@ const message = sq.define('message', {
     }
 );
 
-message.belongsTo(user, { foreignKey: 'user_id' });
-user.hasMany(message, { foreignKey: 'user_id' });
+// message.belongsTo(user, { foreignKey: 'user_id_1' });
+// user.hasMany(message, { foreignKey: 'user_id_1' });
 
+// message.belongsTo(user, { foreignKey: 'user_id_2' });
+// user.hasMany(message, { foreignKey: 'user_id_2' });
 
 
 module.exports = message

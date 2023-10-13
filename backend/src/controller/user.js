@@ -85,6 +85,19 @@ class Controller {
 			next(err)
 		}
 	}
+	static async user_by_id(req, res) {
+		const { id } = req.params
+		try {
+			let data = await sq.query(`select * from "user" as u where u.id = :id`,type({id}))
+			console.log(data)
+			// let amount = await sq.query(`select count(*) as "amount" from "user" `)
+			
+			res.status(200).json({ status: 200, message: "success", data })
+		}
+		catch (err) {
+			console.log(err)
+		}
+	}
 	static async delete(req, res) {
 		const { id } = req.params.id
 

@@ -12,7 +12,7 @@ router.post('/list_user', auth,controller_user.list_user);
 router.post('/send_otp',auth, controller_otp.send_otp_email);
 router.post('/verify_otp',auth, controller_otp.verify_otp);
 
-
+router.get('/user_by_id/:id',auth, controller_user.user_by_id)
 
 module.exports = router
 
