@@ -11,7 +11,7 @@ const user_auth_m = require('../model/user_auth')
 
 
 class Controller {
-	static async register(req, res) {
+	static async register(req, res,next) {
 		const { username, password, first_name, middle_name, last_name, phone, email, last_login, intro, profile } = req.body
 
 		try {
@@ -22,7 +22,7 @@ class Controller {
 			else {
 				let hash_pass = bcrypt.hashPassword(password)
 				const result = await user_m.create({ id: nanoid(20), username: `${username}`, password: `${hash_pass}`, first_name: `${first_name}`, middle_name: `${middle_name}`, last_name: `${last_name}`, phone: `${phone}`, email: `${email}`, last_login, intro: `${intro}`, profile: `${profile}` })
-				console.log(result.id)
+				// console.log(result.id)
 				res.status(200).json({ status: 200, message: "success", data: result })
 			}
 		}
@@ -31,13 +31,19 @@ class Controller {
 		}
 	}
 
-	static async login(req, res) {
+	static async login(req, res,next) {
 		const { username, password, email } = req.body
 
 		try {
 			let replace = ''
+			if(email){
+				replace += `or email = :email`
+			}
+			if(username){
+				replace += `username = :username`
+			}
 			if (!username && !email) return res.status(200).json({ status: 500, message: "empty email and userename " })
-			let data_user = await sq.query(`select * from "user" where username = :username or email = :email`, type({ username, email }))
+			let data_user = await sq.query(`select * from "user" where  ${replace}`, type({ username, email }))
 			// let is_verified_email = data_user[0].is_verified_email
 			// if (!is_verified_email) { return res.status(200).json({ status: 500, message: "email has not been verified" }) }
 			if (data_user.length < 1) throw new Error('missing username or email') 
@@ -62,10 +68,11 @@ class Controller {
 			next(err)
 		}
 	}
-	static async logout(req, res) {
-		const { id } = req.params
+	static async logout(req, res,next) {
+		const { user_id } = req.body
 		try {
-			await user_auth_m.destroy({ where: { id } })
+			// console.log(id)
+			await user_auth_m.destroy({ where: { user_id } })
 			res.status(200).json({ status: 200, message: "success" })
 		}
 		catch (err) {

@@ -18,7 +18,7 @@ const user_otp = sq.define('user_otp', {
     },
 },
     {
-        paranoid: false,
+        paranoid: true,
         freezeTableName: true
     }
 );

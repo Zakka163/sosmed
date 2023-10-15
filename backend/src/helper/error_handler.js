@@ -9,7 +9,7 @@ const error = (err,req,res,next) => {
 
 
 	// const message_error = { }
-	res.status(500).json({ status: '404' });
+	res.status(500).json({ status: '500',message:err.message });
 }
 
-module.exports = { not_found,error }
+module.exports = { not_found,error}

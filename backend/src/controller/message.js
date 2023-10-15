@@ -14,6 +14,7 @@ const moment = require('moment')
 const list_message = async (req, res) => {
 	const { total, page, user_id, last_message, last_sent_user } = req.body
 	try {
+		console.log(req.body)
 		let value = ''
 		let value2 = ''
 		if (user_id) {
@@ -31,8 +32,8 @@ const list_message = async (req, res) => {
 		let data_message = await sq.query(`select m.id as "m_id",ms.id as "ms_id",u.username as u_1_username,u2.username as u_2_username ,* 
         from message m 
 		join message_sub ms on ms.message_id = m.id
-		left join "user" u on u.id = ms.user_id_1 
-		left join "user" u2 on u2.id = ms.user_id_2  
+		join "user" u on u.id = ms.user_id_1 
+		join "user" u2 on u2.id = ms.user_id_2  
         where m."deletedAt" isnull  ${value2} order by m."createdAt" desc ${value}`,
 			type({
 				user_id: `${user_id}`,
@@ -43,8 +44,8 @@ const list_message = async (req, res) => {
 		if (page && total) {
 			let jml = await sq.query(`select count(*)as "total" from message m 
 		join message_sub ms on ms.message_id = m.id
-		left join "user" u on u.id = ms.user_id_1 
-		left join "user" u2 on u2.id = ms.user_id_2  
+		join "user" u on u.id = ms.user_id_1 
+		join "user" u2 on u2.id = ms.user_id_2  
         where m."deletedAt" isnull  ${value2} `,
 				type({
 					user_id: `${user_id}`,

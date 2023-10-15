@@ -11,7 +11,7 @@ const user_auth = sq.define('user_auth', {
     },
 },
     {
-        paranoid: false,
+        paranoid: true,
         freezeTableName: true
     }
 );
