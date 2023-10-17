@@ -8,8 +8,9 @@ const auth = async (req, res, next) => {
         if (!token) return res.status(500).json({ status: 500, message: "no token" })
 
         let payload = jwt.verifyToken(token)
+        // console.log(payload)
         const chechk_token = await sq.query(`select * from user_auth where id = :id and "deletedAt" isnull`, type({ id: payload.id }))
-         console.log(chechk_token )
+        // console.log(chechk_token )
         if (chechk_token < 1) return res.status(500).json({ status: 500, message: "authentication failed" })
 
 

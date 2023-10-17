@@ -18,7 +18,7 @@ class Controller {
 			let match = await sq.query(`select * from "user" u where u.username = :username or u.email = :email and "deletedAt" isnull`, type({ username, email }))
 
 			let is_data_already = match.length > 0
-			if (is_data_already) throw new Error('data already exist')
+			if (is_data_already) throw new Error('username or email already exist')
 			else {
 				let hash_pass = bcrypt.hashPassword(password)
 				const result = await user_m.create({ id: nanoid(20), username: `${username}`, password: `${hash_pass}`, first_name: `${first_name}`, middle_name: `${middle_name}`, last_name: `${last_name}`, phone: `${phone}`, email: `${email}`, last_login, intro: `${intro}`, profile: `${profile}` })
@@ -37,24 +37,24 @@ class Controller {
 		try {
 			let replace = ''
 			if(email){
-				replace += `or email = :email`
+				replace += `email = :email `
 			}
 			if(username){
-				replace += `username = :username`
+				replace += ` or username = :username`
 			}
 			if (!username && !email) return res.status(200).json({ status: 500, message: "empty email and userename " })
 			let data_user = await sq.query(`select * from "user" where  ${replace}`, type({ username, email }))
 			// let is_verified_email = data_user[0].is_verified_email
 			// if (!is_verified_email) { return res.status(200).json({ status: 500, message: "email has not been verified" }) }
-			if (data_user.length < 1) throw new Error('missing username or email') 
+			if (data_user.length < 1) throw new Error(`username or email doesn't exist`) 
 			let hash_pass = data_user[0].password
 			let is_match = bcrypt.compare(password, hash_pass)
 
 			if (!is_match) throw new Error('wrong password') 
 
-			const check_login = await sq.query(`select * from user_auth ua join "user" u on u.id = ua.user_id where ua.user_id = :id`, type({ id: `${data_user[0].id}` }))
+			// const check_login = await sq.query(`select * from user_auth ua join "user" u on u.id = ua.user_id where ua.user_id = :id and ua."deletedAt" isnull`, type({ id: `${data_user[0].id}` }))
 
-			if (check_login.length > 0) throw new Error('already logged in') 
+			// if (check_login.length > 0) throw new Error('already logged in') 
 			let token = jwt.generateToken({ id: data_user[0].id })
 			await sq.transaction(async (t) => {
 				let time = moment()
@@ -93,10 +93,10 @@ class Controller {
 		}
 	}
 	static async user_by_id(req, res) {
-		const { id } = req.params
+		const { user_id } = req.body
 		try {
-			let data = await sq.query(`select * from "user" as u where u.id = :id`,type({id}))
-			console.log(data)
+			let data = await sq.query(`select * from "user" as u where u.id = :id`,type({id:user_id}))
+			// console.log(data)
 			// let amount = await sq.query(`select count(*) as "amount" from "user" `)
 			
 			res.status(200).json({ status: 200, message: "success", data })

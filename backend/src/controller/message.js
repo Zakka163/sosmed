@@ -66,7 +66,7 @@ const list_message = async (req, res) => {
 
 const list_by_message = async (req, res) => {
 	const { total, page, message_id, to_user_id, from_user_id, message_value } = req.body
-
+	console.log(req.body)
 	try {
 		let value = ''
 		let value2 = ''
@@ -86,7 +86,7 @@ const list_by_message = async (req, res) => {
 			value += ` offset :offset limit :total`
 		}
 		let data_message = await sq.query(`select mp.id as "mp_id",m.id as "m_id",* from message_pool mp 
-		join message m on m.id = mp.message_id   ${value2} order by mp."createdAt" desc ${value}`,
+		join message m on m.id = mp.message_id   ${value2} order by mp."createdAt" asc ${value}`,
 			type({
 				message_id: `${message_id}`,
 				from_user_id: `${from_user_id}`,

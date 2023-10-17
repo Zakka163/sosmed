@@ -1,0 +1,6 @@
+{
+  "devDependencies": {
+    "concurrently": "^8.2.1"
+  }
+
+}

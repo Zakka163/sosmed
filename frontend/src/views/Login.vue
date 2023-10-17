@@ -1,19 +1,58 @@
 <script setup>
-import { reactive,ref } from 'vue';
-import { useRouter,useRoute } from 'vue-router'
+import { reactive, ref } from 'vue';
+import { useRouter, useRoute } from 'vue-router'
+import { useToast } from 'vue-toast-notification'
 import { inject } from 'vue'
 import axios from 'axios';
-import {status} from '../helper.js'
+import { useCookies } from "vue3-cookies"
+
+import { status } from '../helper.js'
 
 const router = useRouter()
-const user = reactive({
-    email:'',
-    password:''
-})
-function login(){
+const toast = useToast();
 
-    status.setter(true)
-    router.push('/')
+const cookies = useCookies()
+
+const user = reactive({
+    email_or_username: '',
+    password: ''
+})
+function login() {
+    if (!user.email_or_username || !user.password) {
+        return toast.open({
+            message: 'Something went wrong!',
+            type: 'error',
+            position: 'top-right',
+            duration: 1000
+        })
+    }
+
+    axios.post(`http://localhost:5001/user/login`, {
+        email: user.email_or_username,
+        username: user.email_or_username,
+        password: user.password
+    }).then(response => {
+        console.log(response);
+        toast.open({
+            message: 'login succes',
+            type: 'success',
+            position: 'top-right',
+            duration: 1000
+        })
+        cookies.cookies.set("token", response.data.acces_token);
+        router.push('/')
+    }).catch((err) => {
+        // console.log(err.response.data.message);
+        toast.open({
+            message: err.response.data.message,
+            type: 'error',
+            position: 'top-right',
+            duration: 1000
+        })
+    })
+
+
+    // status.setter(true)
 
 }
 </script>
@@ -24,16 +63,13 @@ function login(){
             <div class="text-center ">Login</div>
             <form>
                 <div class="mb-3">
-                    <label for="exampleInputEmail1" class="form-label">Email</label>
-                    <input v-model="user.email" type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+                    <label for="exampleInputEmail1" class="form-label">Email or Username</label>
+                    <input v-model="user.email_or_username" type="email" class="form-control" id="exampleInputEmail1"
+                        aria-describedby="emailHelp">
                 </div>
                 <div class="mb-3">
                     <label for="exampleInputPassword1" class="form-label">Password</label>
                     <input v-model="user.password" type="password" class="form-control" id="exampleInputPassword1">
-                </div>
-                <div class="mb-3 form-check">
-                    <input type="checkbox" class="form-check-input" id="exampleCheck1">
-                    <label class="form-check-label" for="exampleCheck1">Check me out</label>
                 </div>
                 <button @click="login" type="submit" class="btn btn-primary">login</button>
             </form>
