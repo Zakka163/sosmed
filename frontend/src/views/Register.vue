@@ -25,7 +25,7 @@ function register() {
         })
         
     }
-    axios.post(`http://localhost:5001/user/register`, {
+    axios.post(`http://sosmed-backend-api.vercel.app:8080/user/register`, {
         email: user.email,
         username: user.username,
         password: user.password

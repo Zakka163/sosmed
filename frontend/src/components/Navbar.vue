@@ -17,7 +17,7 @@ const router = useRouter()
 const username = defineProps(['user'])
 
 function logout() {
-    axios.post('http://localhost:5001/user/logout', {
+    axios.post('http://sosmed-backend-api.vercel.app:8080/user/logout', {
         token: cookies.cookies.get("token")
     }).then(() => {
         toast.open({

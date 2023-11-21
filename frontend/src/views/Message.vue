@@ -37,7 +37,7 @@ function add_message(){
 }
 
 function check_login() {
-    axios.post('http://localhost:5001/user/user_by_id', {
+    axios.post('http://sosmed-backend-api.vercel.app:8080/user/user_by_id', {
         token: cookies.cookies.get("token")
     }).then(response => {
         // console.log(response)
@@ -69,7 +69,7 @@ function check_login() {
 
 }
 function get_message() {
-    axios.post('http://localhost:5001/message/list_message', {
+    axios.post('http://sosmed-backend-api.vercel.app:8080/message/list_message', {
         token: cookies.cookies.get("token")
     }).then((response) => {
         console.log(response.data.data_message)

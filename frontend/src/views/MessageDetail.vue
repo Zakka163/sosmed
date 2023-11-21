@@ -32,7 +32,7 @@ socket.on('refresh_conversation', (data) => {
 
 
 function check_login() {
-    axios.post('http://localhost:5001/user/user_by_id', {
+    axios.post('http://sosmed-backend-api.vercel.app:8080/user/user_by_id', {
         token: cookies.cookies.get("token")
     }).then(response => {
         // console.log(response)
@@ -59,7 +59,7 @@ function backpage() {
 }
 function get_conversation() {
 
-    axios.post('http://localhost:5001/message/list_by_message', {
+    axios.post('http://sosmed-backend-api.vercel.app:8080/message/list_by_message', {
         token: cookies.cookies.get("token"),
         message_id: route.params.id
     }).then((response) => {

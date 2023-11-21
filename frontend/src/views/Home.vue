@@ -27,7 +27,7 @@ onMounted(() => {
 
 
 function check_login() {
-    axios.post('http://localhost:5001/user/user_by_id', {
+    axios.post('http://sosmed-backend-api.vercel.app:8080/user/user_by_id', {
         token: cookies.cookies.get("token")
     }).then(response => {
         // console.log(response)
