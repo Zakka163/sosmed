@@ -10,6 +10,7 @@ const sq = new Sequelize(process.env.DB_NAME, process.env.DB_USER, process.env.D
     dateStrings: true,
     typeCast: true,
   },
+  ssl: true
   // pool: {
   //   max: 100,
   //   min: 0,
